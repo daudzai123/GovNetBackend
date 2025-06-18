@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.project</groupId>
-	<artifactId>DocumentMIS</artifactId>
+	<artifactId>GovNet</artifactId>
 	<version>0.0.1</version>
-	<name>DocumentMIS</name>
-	<description>Project for Document management system</description>
+	<name>GovNet</name>
+	<description>Project for GovNet</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -136,7 +136,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>documentmis</finalName>
+		<finalName>govnet</finalName>
 	</build>
 
 </project>
