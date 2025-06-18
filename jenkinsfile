@@ -1,0 +1,39 @@
+pipeline {
+    environment {
+        dockerImageName = "dms-backend1"
+        dockerComposeFile = "docker-compose.yml"
+    }
+    agent any
+    tools {
+        maven 'Maven3.9.6'
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    echo 'Building the project...'
+                    sh 'mvn clean install -DskipTests'
+                }
+            }
+        }
+        stage('Cleanup Old Containers and Images') {
+            steps {
+                script {
+                    // Stop and remove containers with the old image name
+                    sh 'docker ps -a | grep dms-backend1 | awk \'{print $1}\' | xargs docker rm -f || true'
+                    // Remove old images with the old image name
+                    sh 'docker images | grep dms-backend1 | awk \'{print $3}\' | xargs docker rmi -f || true'
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build dockerImageName
+                    echo 'Successfully dockerized!'
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,1 @@
+java -jar documentmis.jar --spring.config.location=file:./  > /dev/null 2>&1 &

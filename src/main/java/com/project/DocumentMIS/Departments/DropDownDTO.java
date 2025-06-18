@@ -1,0 +1,9 @@
+package com.project.DocumentMIS.Departments;
+
+import lombok.Data;
+
+@Data
+public class DropDownDTO {
+    private Long depId;
+    private String depName;
+}
