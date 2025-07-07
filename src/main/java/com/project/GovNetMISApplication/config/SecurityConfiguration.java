@@ -31,8 +31,8 @@ public class SecurityConfiguration {
                 config.setAllowCredentials(true);
                 config.addAllowedOrigin("http://localhost:5173");
                 config.addAllowedOrigin("http://localhost:8081"); // Add your React app URL
-                config.addAllowedOrigin("http://103.132.98.197:5173");
-                config.addAllowedOrigin("http://103.132.98.197:8081");
+                config.addAllowedOrigin("http://10.10.253.5:5173");
+                config.addAllowedOrigin("http://10.10.253.5:8081");
                 config.addAllowedHeader("*");
                 config.addAllowedMethod("*");
                 source.registerCorsConfiguration("/**", config);
