@@ -18,9 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.project.GovNetMISApplication.ExceptionHandlingFiles.CustomAccessDeniedHandler;
 
-import java.util.Arrays;
 import java.util.List;
-
 
 @Configuration
 @EnableWebSecurity
@@ -33,19 +31,17 @@ public class SecurityConfiguration {
     private CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
-public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration config = new CorsConfiguration();
-    config.setAllowCredentials(true);
-    config.setAllowedOrigins(List.of("http://10.10.253.5:81")); // Allow only your frontend origin
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(List.of("http://10.10.253.5:81")); // Your frontend origin
+        config.addAllowedHeader("*");  // allow all headers
+        config.addAllowedMethod("*");  // allow all HTTP methods
 
-    config.addAllowedHeader("*");  // allow all headers
-    config.addAllowedMethod("*");  // allow all HTTP methods
-
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", config);
-    return source;
-}
-
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -58,11 +54,11 @@ public CorsConfigurationSource corsConfigurationSource() {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        // Allow OPTIONS requests for all paths to fix CORS preflight errors
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/signin").permitAll()
-
-                        // your other requestMatchers here (roles and endpoints)
                         .requestMatchers("/committee/getSentDocumentsByDepartmentByType").permitAll()
 
                         .requestMatchers("/user/all").hasRole("user_all")
@@ -111,8 +107,8 @@ public CorsConfigurationSource corsConfigurationSource() {
                         .requestMatchers("/department/update/**").hasRole("department_update")
                         .requestMatchers("/department/add").hasRole("department_creation")
                         .requestMatchers("/user/add").hasRole("user_creation")
-
-                        .anyRequest().permitAll())
+                        .anyRequest().permitAll()
+                )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
