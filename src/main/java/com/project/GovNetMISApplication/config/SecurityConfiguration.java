@@ -31,26 +31,19 @@ public class SecurityConfiguration {
     private CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
+public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration config = new CorsConfiguration();
+    config.setAllowCredentials(true);
+    config.setAllowedOrigins(List.of("http://10.10.253.5:81")); // Allow only your frontend origin
 
-        // Add your frontend origins here:
-        config.setAllowedOrigins(Arrays.asList(
-                "http://localhost:5173",
-                "http://localhost:8081",
-                "http://10.10.253.5:5173",
-                "http://10.10.253.5:8081",
-                "http://10.10.253.5:81"  // your frontend port
-        ));
+    config.addAllowedHeader("*");  // allow all headers
+    config.addAllowedMethod("*");  // allow all HTTP methods
 
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", config);
+    return source;
+}
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
